@@ -1,7 +1,7 @@
 import { shuffleArray } from '../helpers/helpers';
 import { gameCards } from './game-cards';
 
-export class GameField {
+export class GameCard {
   shoeId!: string;
   flipped = false;
   matched = false;
@@ -12,12 +12,12 @@ export class GameField {
 }
 
 export class GameBoard {
-  fields: GameField[] = [];
+  fields: GameCard[] = [];
 
   constructor(shoeIndexes: number[]) {
     for (const index of shoeIndexes) {
-      this.fields.push(new GameField(gameCards[index]));
-      this.fields.push(new GameField(gameCards[index]));
+      this.fields.push(new GameCard(gameCards[index]));
+      this.fields.push(new GameCard(gameCards[index]));
     }
     this.fields = shuffleArray(this.fields);
   }

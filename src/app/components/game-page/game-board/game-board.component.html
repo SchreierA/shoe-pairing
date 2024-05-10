@@ -3,7 +3,9 @@
   <div
     [ngClass]="{
       'game-board__field': true,
+      'game-board__field--interactable': !field.matched || !field.flipped
     }"
+    (click)="flipCard(field)"
   >
     <img [src]="getFieldImageSource(field)" alt="" />
   </div>
