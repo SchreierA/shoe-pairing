@@ -41,7 +41,7 @@ export class GameBoardComponent implements OnInit {
         this.selectedCard.flipped = false;
         setTimeout(() => {
           card.flipped = false;
-        }, 1000);
+        }, 400);
       }
       this.selectedCard = undefined;
       return;
