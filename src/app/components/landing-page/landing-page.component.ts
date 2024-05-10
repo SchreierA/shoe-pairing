@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { generatePossibleGameSizes } from '../../helpers/helpers';
 
 @Component({
   selector: 'app-landing-page',
@@ -10,9 +11,7 @@ import { Router } from '@angular/router';
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent {
-  possibleDeckSizes: number[] = Array.from({ length: 8 }).map(
-    (_, index) => (index + 3) * 2
-  );
+  possibleDeckSizes: number[] = generatePossibleGameSizes();
 
   selectedDeckSize = this.possibleDeckSizes[0];
 
