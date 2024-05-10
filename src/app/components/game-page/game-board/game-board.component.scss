@@ -1,0 +1,16 @@
+.game-board {
+  width: 50%;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 13px;
+  &__field {
+    width: 130px;
+    height: 130px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
