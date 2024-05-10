@@ -15,3 +15,36 @@ html {
 .separator {
   margin-inline: 5px;
 }
+
+.card {
+  background-color: white;
+  border-radius: 18px;
+  padding: 18px;
+  color: black;
+}
+
+.app-button {
+  border: none;
+  border-radius: 24px;
+
+  background-color: rgb(228, 0, 57);
+  color: white;
+
+  padding: 12px;
+
+  font-size: 13pt;
+
+  display: block;
+
+  &:hover {
+    background-color: rgb(268, 40, 97);
+    cursor: pointer;
+  }
+}
+
+.app-dropdown {
+  border: 1px lightgray solid;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: white;
+}

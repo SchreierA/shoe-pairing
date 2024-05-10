@@ -1,0 +1,18 @@
+<div class="landing-page card">
+  <img class="landing-page__logo" src="assets/kcm-logo-blackwhite.svg" alt="" />
+  <h2>MEMORY GAME</h2>
+  <div class="landing-page__dropdown-wrapper">
+    <label for="deck-size">Deck size:</label>
+    <select
+      name="deck-size"
+      id="deck-size"
+      [(ngModel)]="selectedSize"
+      class="app-dropdown landing-page__dropdown"
+    >
+      @for(size of possibleDeckSizes; track size){
+      <option value="{{ size }}">{{ size }}</option>
+      }
+    </select>
+  </div>
+  <button class="landing-page__button app-button">START A NEW GAME</button>
+</div>
