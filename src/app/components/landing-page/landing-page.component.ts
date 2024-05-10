@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing-page',
@@ -13,5 +14,11 @@ export class LandingPageComponent {
     (_, index) => (index + 3) * 2
   );
 
-  selectedSize = this.possibleDeckSizes[0];
+  selectedDeckSize = this.possibleDeckSizes[0];
+
+  constructor(private router: Router) {}
+
+  startGame() {
+    this.router.navigate(['game', this.selectedDeckSize]);
+  }
 }

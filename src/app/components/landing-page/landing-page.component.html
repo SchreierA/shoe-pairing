@@ -6,7 +6,7 @@
     <select
       name="deck-size"
       id="deck-size"
-      [(ngModel)]="selectedSize"
+      [(ngModel)]="selectedDeckSize"
       class="app-dropdown landing-page__dropdown"
     >
       @for(size of possibleDeckSizes; track size){
@@ -14,5 +14,7 @@
       }
     </select>
   </div>
-  <button class="landing-page__button app-button">START A NEW GAME</button>
+  <button class="landing-page__button app-button" (click)="startGame()">
+    START A NEW GAME
+  </button>
 </div>
