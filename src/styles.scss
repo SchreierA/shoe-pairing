@@ -23,6 +23,12 @@ html {
   color: black;
 }
 
+.framed-text {
+  border: 1px lightgray solid;
+  border-radius: 8px;
+  padding: 8px;
+}
+
 .app-button {
   border: none;
   border-radius: 24px;
@@ -47,4 +53,12 @@ html {
   border-radius: 8px;
   padding: 8px;
   background-color: white;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.red {
+  color: rgb(228, 0, 57);
 }

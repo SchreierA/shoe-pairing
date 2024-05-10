@@ -16,15 +16,17 @@
     filter: invert(1);
   }
 
-  &__dropdown-wrapper {
-    width: 30%;
-  }
+  ::ng-deep app-start-game {
+    width: 60%;
+    .start-game {
+      &__dropdown-wrapper {
+        width: 60%;
+      }
 
-  &__dropdown {
-    width: 100%;
-  }
-
-  &__button {
-    width: 50%;
+      &__button {
+        margin-top: 36px;
+        width: 100%;
+      }
+    }
   }
 }

@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './game-state.component.html',
   styleUrl: './game-state.component.scss',
 })
-export class GameStateComponent {}
+export class GameStateComponent {
+  currentTries = 0;
+  personalBest = 0;
+}
