@@ -18,8 +18,6 @@ export class GameBoardComponent implements OnInit {
 
   selectedCard?: GameCard;
 
-  lockout = false;
-
   ngOnInit(): void {
     this.gameBoard = this.generateGameBoard(this.deckSize);
   }
@@ -41,7 +39,6 @@ export class GameBoardComponent implements OnInit {
         card.matched = true;
       } else {
         this.selectedCard.flipped = false;
-        this.lockout = true;
         setTimeout(() => {
           card.flipped = false;
         }, 1000);
