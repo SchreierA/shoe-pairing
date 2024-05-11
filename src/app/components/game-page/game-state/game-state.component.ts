@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { StartGameComponent } from '../../shared/start-game/start-game.component';
-import { GameDataService } from '../../../services/game-data.service';
+import { GameDataSharingService } from '../../../services/game-data-sharing.service';
 
 @Component({
   selector: 'app-game-state',
@@ -13,16 +13,16 @@ export class GameStateComponent {
   currentTries = 0;
   personalBest = 0;
 
-  constructor(private gameDataService: GameDataService) {
-    gameDataService.currentTries$.subscribe(
+  constructor(private gameDataSharingService: GameDataSharingService) {
+    gameDataSharingService.currentTries$.subscribe(
       (value) => (this.currentTries = value)
     );
-    gameDataService.personalBest$.subscribe(
+    gameDataSharingService.personalBest$.subscribe(
       (value) => (this.personalBest = value)
     );
   }
 
   requestRestart() {
-    this.gameDataService.resetRequest$.next(0);
+    this.gameDataSharingService.resetRequest$.next(0);
   }
 }

@@ -10,7 +10,7 @@ import {
 import { GameBoard, GameCard } from '../../../model/game-board';
 import { CommonModule } from '@angular/common';
 import { generateGivenAmountUniqueRandomNumbers } from '../../../helpers/helpers';
-import { GameDataService } from '../../../services/game-data.service';
+import { GameDataSharingService } from '../../../services/game-data-sharing.service';
 
 @Component({
   selector: 'app-game-board',
@@ -33,10 +33,10 @@ export class GameBoardComponent implements OnInit, OnChanges {
   matches = 0;
 
   constructor(
-    private gameDataService: GameDataService,
+    private gameDataSharingService: GameDataSharingService,
     private cd: ChangeDetectorRef
   ) {
-    gameDataService.resetRequest$.subscribe((_) => this.restartGame());
+    gameDataSharingService.resetRequest$.subscribe((_) => this.restartGame());
   }
 
   ngOnInit(): void {
@@ -58,7 +58,7 @@ export class GameBoardComponent implements OnInit, OnChanges {
   countTries() {
     this.tryCount++;
     if (this.tryCount % 2 === 0) {
-      this.gameDataService.currentTries$.next(this.tryCount / 2);
+      this.gameDataSharingService.currentTries$.next(this.tryCount / 2);
     }
   }
 
@@ -88,7 +88,7 @@ export class GameBoardComponent implements OnInit, OnChanges {
     this.fields = this.generateGameCards(this.deckSize);
     this.matches = 0;
     this.tryCount = 0;
-    this.gameDataService.currentTries$.next(0);
+    this.gameDataSharingService.currentTries$.next(0);
     this.cd.detectChanges();
   }
 
@@ -96,7 +96,7 @@ export class GameBoardComponent implements OnInit, OnChanges {
     if (this.selectedCard?.shoeId === card.shoeId) {
       this.matches++;
       if (this.matches === this.deckSize / 2) {
-        this.gameDataService.personalBest$.next(this.tryCount / 2);
+        this.gameDataSharingService.personalBest$.next(this.tryCount / 2);
       }
       return true;
     }

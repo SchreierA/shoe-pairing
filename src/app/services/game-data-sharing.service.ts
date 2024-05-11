@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class GameDataService {
+export class GameDataSharingService {
   personalBest$ = new BehaviorSubject(0);
   currentTries$ = new BehaviorSubject(0);
 
