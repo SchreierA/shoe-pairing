@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -23,7 +24,7 @@ export class GameBoardComponent implements OnInit, OnChanges {
   @Input()
   deckSize!: number;
 
-  gameBoard?: GameBoard;
+  fields?: GameCard[];
 
   selectedCard?: GameCard;
 
@@ -31,22 +32,20 @@ export class GameBoardComponent implements OnInit, OnChanges {
 
   matches = 0;
 
-  constructor(private gameDataService: GameDataService) {
-    gameDataService.resetRequest$.subscribe((_) => {
-      this.gameBoard = this.generateGameBoard(this.deckSize);
-      this.matches = 0;
-      this.tryCount = 0;
-      this.gameDataService.currentTries$.next(0);
-    });
+  constructor(
+    private gameDataService: GameDataService,
+    private cd: ChangeDetectorRef
+  ) {
+    gameDataService.resetRequest$.subscribe((_) => this.restartGame());
   }
 
   ngOnInit(): void {
-    this.gameBoard = this.generateGameBoard(this.deckSize);
+    this.fields = this.generateGameCards(this.deckSize);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['deckSize']) {
-      this.gameBoard = this.generateGameBoard(this.deckSize);
+      this.fields = this.generateGameCards(this.deckSize);
     }
   }
 
@@ -85,6 +84,14 @@ export class GameBoardComponent implements OnInit, OnChanges {
     this.selectedCard = card;
   }
 
+  private restartGame() {
+    this.fields = this.generateGameCards(this.deckSize);
+    this.matches = 0;
+    this.tryCount = 0;
+    this.gameDataService.currentTries$.next(0);
+    this.cd.detectChanges();
+  }
+
   private checkForMatch(card: GameCard): boolean {
     if (this.selectedCard?.shoeId === card.shoeId) {
       this.matches++;
@@ -96,9 +103,9 @@ export class GameBoardComponent implements OnInit, OnChanges {
     return false;
   }
 
-  private generateGameBoard(size: number): GameBoard {
+  private generateGameCards(size: number): GameCard[] {
     const numberOfShoes = size / 2;
     const indexes = generateGivenAmountUniqueRandomNumbers(numberOfShoes);
-    return new GameBoard(indexes);
+    return new GameBoard(indexes).fields;
   }
 }
