@@ -1,5 +1,5 @@
 describe('AppComponent', () => {
-  it('', () => {
+  it('implicit test', () => {
     expect(true).toBeTruthy();
   });
 });
