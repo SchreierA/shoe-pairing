@@ -83,19 +83,13 @@ export class GameBoardComponent implements OnInit, OnChanges {
 
     if (this.selectedCard) {
       if (this.checkForMatch(card)) {
-        this.selectedCard!.matched = true;
+        this.selectedCard.matched = true;
         card.matched = true;
-      } else {
-        this.selectedCard.flipped = false;
-        setTimeout(() => {
-          card.flipped = false;
-          this.saveBoardState();
-        }, 400);
-      }
-      this.selectedCard = undefined;
-      this.saveBoardState();
-      return;
+        this.selectedCard = undefined;
+        this.saveBoardState();
+      } else this.selectedCard.flipped = false;
     }
+
     this.selectedCard = card;
     this.saveBoardState();
   }
@@ -127,6 +121,7 @@ export class GameBoardComponent implements OnInit, OnChanges {
     this.tryCount = 0;
     this.selectedCard = undefined;
     this.gameDataSharingService.currentTries$.next(0);
+    this.saveBoardState();
     this.cd.detectChanges();
   }
 
