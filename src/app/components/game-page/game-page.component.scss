@@ -1,10 +1,23 @@
 .game-page {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column-reverse;
   gap: 32px;
+
+  margin-inline: 16px;
+
+  @media screen and (min-width: 1024px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 
   app-game-board {
     width: fit-content;
+    max-width: 760px;
+  }
+
+  app-game-board,
+  app-game-state {
+    margin-top: auto;
   }
 }

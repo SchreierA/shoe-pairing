@@ -31,42 +31,44 @@ html {
   padding: 8px;
 }
 
-.app-button {
-  border: none;
+@mixin app-button-common {
   border-radius: 24px;
-
-  background-color: $red;
-  color: white;
 
   padding: 12px;
 
-  font-size: 13pt;
+  font-size: 11pt;
 
   display: block;
 
   &:hover {
-    background-color: rgb(268, 40, 97);
     cursor: pointer;
   }
 }
 
+.app-button {
+  @include app-button-common;
+
+  border: none;
+
+  background-color: $red;
+  color: white;
+
+  &:hover {
+    background-color: rgb(268, 40, 97);
+  }
+}
+
 .app-button-white {
+  @include app-button-common;
+
   border: 1px $red solid;
-  border-radius: 24px;
 
   background-color: white;
   color: $red;
 
-  padding: 12px;
-
-  font-size: 13pt;
-
-  display: block;
-
   &:hover {
     background-color: $red;
     color: white;
-    cursor: pointer;
   }
 }
 

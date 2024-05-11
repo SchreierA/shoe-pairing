@@ -3,7 +3,8 @@
   <div
     [ngClass]="{
       'game-board__field': true,
-      'game-board__field--interactable': !field.matched || !field.flipped
+      'game-board__field--interactable': !field.matched || !field.flipped,
+      'game-board__field--matched': field.matched
     }"
     (click)="flipCard(field)"
   >

@@ -1,9 +1,17 @@
 <div class="game-state card">
   <h2>SCORE BOARD</h2>
-  <p>Current tries</p>
-  <p class="bold framed-text">{{ currentTries }}</p>
-  <p>Best</p>
-  <p class="bold framed-text red">{{ personalBest }}</p>
-  <button class="app-button-white" (click)="requestRestart()">RESTART</button>
-  <app-start-game></app-start-game>
+  <div class="game-state__display">
+    <p>Current tries</p>
+    <p class="bold framed-text">{{ currentTries }}</p>
+  </div>
+  <div class="game-state__display">
+    <p>Best</p>
+    <p class="bold framed-text red">{{ personalBest }}</p>
+    <div class="game-state__controlls">
+      <button class="app-button-white" (click)="requestRestart()">
+        RESTART
+      </button>
+      <app-start-game></app-start-game>
+    </div>
+  </div>
 </div>

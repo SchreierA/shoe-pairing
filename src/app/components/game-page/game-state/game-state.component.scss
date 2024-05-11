@@ -1,3 +1,28 @@
-.app-button-white {
-  width: 100%;
+.game-state {
+  min-width: 200px;
+  .app-button-white {
+    width: 100%;
+  }
+  p {
+    margin: 0;
+  }
+  h2 {
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  &__display {
+    margin-top: 24px;
+  }
+
+  &__controlls {
+    .app-button-white {
+      margin-top: 24px;
+      margin-bottom: 32px;
+      margin-inline: auto;
+      width: 91%;
+    }
+  }
 }
