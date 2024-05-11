@@ -11,6 +11,11 @@ import { GameBoard, GameCard } from '../../../model/game-board';
 import { CommonModule } from '@angular/common';
 import { generateGivenAmountUniqueRandomNumbers } from '../../../helpers/helpers';
 import { GameDataSharingService } from '../../../services/game-data-sharing.service';
+import { StorageService } from '../../../services/storage.sevice';
+import {
+  CURRENT_TRIES_LOCAL_STORAGE_KEY,
+  GAME_BOARD_LOCAL_STORAGE_KEY,
+} from '../../../helpers/constants';
 
 @Component({
   selector: 'app-game-board',
@@ -34,13 +39,21 @@ export class GameBoardComponent implements OnInit, OnChanges {
 
   constructor(
     private gameDataSharingService: GameDataSharingService,
-    private cd: ChangeDetectorRef
-  ) {
-    gameDataSharingService.resetRequest$.subscribe((_) => this.restartGame());
-  }
+    private cd: ChangeDetectorRef,
+    private storageSerive: StorageService
+  ) {}
 
   ngOnInit(): void {
-    this.fields = this.generateGameCards(this.deckSize);
+    this.loadBoardState();
+
+    const savedTryCount = this.storageSerive.getItem(
+      CURRENT_TRIES_LOCAL_STORAGE_KEY
+    );
+    this.tryCount = +(savedTryCount ?? 0) * 2;
+
+    this.gameDataSharingService.resetRequest$.subscribe((_) =>
+      this.restartGame()
+    );
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -76,18 +89,43 @@ export class GameBoardComponent implements OnInit, OnChanges {
         this.selectedCard.flipped = false;
         setTimeout(() => {
           card.flipped = false;
+          this.saveBoardState();
         }, 400);
       }
       this.selectedCard = undefined;
+      this.saveBoardState();
       return;
     }
     this.selectedCard = card;
+    this.saveBoardState();
+  }
+
+  private loadBoardState() {
+    const rawSavedState = this.storageSerive.getItem(
+      GAME_BOARD_LOCAL_STORAGE_KEY
+    );
+    const parsedSavedGameState = JSON.parse(rawSavedState ?? '');
+    this.fields = parsedSavedGameState || this.generateGameCards(this.deckSize);
+
+    for (const field of this.fields!) {
+      if (field.flipped) {
+        this.selectedCard = field;
+      }
+    }
+  }
+
+  private saveBoardState() {
+    this.storageSerive.setItem(
+      GAME_BOARD_LOCAL_STORAGE_KEY,
+      JSON.stringify(this.fields)
+    );
   }
 
   private restartGame() {
     this.fields = this.generateGameCards(this.deckSize);
     this.matches = 0;
     this.tryCount = 0;
+    this.selectedCard = undefined;
     this.gameDataSharingService.currentTries$.next(0);
     this.cd.detectChanges();
   }
