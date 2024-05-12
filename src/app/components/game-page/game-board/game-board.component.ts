@@ -16,6 +16,8 @@ import {
   CURRENT_TRIES_LOCAL_STORAGE_KEY,
   GAME_BOARD_LOCAL_STORAGE_KEY,
 } from '../../../helpers/constants';
+import { SubscriptionHostMixin } from '../../../mixins/SubscriptionHost';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-game-board',
@@ -25,7 +27,10 @@ import {
   styleUrl: './game-board.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameBoardComponent implements OnInit, OnChanges {
+export class GameBoardComponent
+  extends SubscriptionHostMixin()
+  implements OnInit, OnChanges
+{
   @Input()
   deckSize!: number;
 
@@ -41,7 +46,9 @@ export class GameBoardComponent implements OnInit, OnChanges {
     private gameDataSharingService: GameDataSharingService,
     private cd: ChangeDetectorRef,
     private storageSerive: StorageService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadBoardState();
@@ -51,9 +58,9 @@ export class GameBoardComponent implements OnInit, OnChanges {
     );
     this.tryCount = +(savedTryCount ?? 0) * 2;
 
-    this.gameDataSharingService.resetRequest$.subscribe((_) =>
-      this.restartGame()
-    );
+    this.gameDataSharingService.resetRequest$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((_) => this.restartGame());
   }
 
   ngOnChanges(changes: SimpleChanges) {

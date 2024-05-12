@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { StartGameComponent } from '../../shared/start-game/start-game.component';
 import { GameDataSharingService } from '../../../services/game-data-sharing.service';
+import { takeUntil } from 'rxjs';
+import { SubscriptionHostMixin } from '../../../mixins/SubscriptionHost';
 
 @Component({
   selector: 'app-game-state',
@@ -9,17 +11,18 @@ import { GameDataSharingService } from '../../../services/game-data-sharing.serv
   templateUrl: './game-state.component.html',
   styleUrl: './game-state.component.scss',
 })
-export class GameStateComponent {
+export class GameStateComponent extends SubscriptionHostMixin() {
   currentTries = 0;
   personalBest = 0;
 
   constructor(private gameDataSharingService: GameDataSharingService) {
-    gameDataSharingService.currentTries$.subscribe(
-      (value) => (this.currentTries = value)
-    );
-    gameDataSharingService.personalBest$.subscribe(
-      (value) => (this.personalBest = value)
-    );
+    super();
+    gameDataSharingService.currentTries$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((value) => (this.currentTries = value));
+    gameDataSharingService.personalBest$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((value) => (this.personalBest = value));
   }
 
   requestRestart() {
