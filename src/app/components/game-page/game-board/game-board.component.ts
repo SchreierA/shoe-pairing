@@ -12,10 +12,7 @@ import { CommonModule } from '@angular/common';
 import { generateGivenAmountUniqueRandomNumbers } from '../../../helpers/helpers';
 import { GameDataSharingService } from '../../../services/game-data-sharing.service';
 import { StorageService } from '../../../services/storage.sevice';
-import {
-  CURRENT_TRIES_LOCAL_STORAGE_KEY,
-  GAME_BOARD_LOCAL_STORAGE_KEY,
-} from '../../../helpers/constants';
+import { LocalStorageKeys } from '../../../helpers/constants';
 import { SubscriptionHostMixin } from '../../../mixins/SubscriptionHost';
 import { takeUntil } from 'rxjs';
 
@@ -54,7 +51,7 @@ export class GameBoardComponent
     this.loadBoardState();
 
     const savedTryCount = this.storageSerive.getItem(
-      CURRENT_TRIES_LOCAL_STORAGE_KEY
+      LocalStorageKeys.CURRENT_TRIES_LOCAL_STORAGE_KEY
     );
     this.tryCount = +(savedTryCount ?? 0) * 2;
 
@@ -64,6 +61,7 @@ export class GameBoardComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // if the deck size prop changes we have to generate a new board
     if (changes['deckSize']) {
       this.fields = this.generateGameCards(this.deckSize);
     }
@@ -75,16 +73,9 @@ export class GameBoardComponent
     return 'assets/rieker-logo-kcm-homework.png';
   }
 
-  countTries() {
-    this.tryCount++;
-    if (this.tryCount % 2 === 0) {
-      this.gameDataSharingService.currentTries$.next(this.tryCount / 2);
-    }
-  }
-
   flipCard(card: GameCard) {
     if (card.flipped || card.matched) return;
-    this.countTries();
+    this.countTry();
 
     card.flipped = true;
 
@@ -92,18 +83,33 @@ export class GameBoardComponent
       if (this.checkForMatch(card)) {
         this.selectedCard.matched = true;
         card.matched = true;
-        this.selectedCard = undefined;
-        this.saveBoardState();
-      } else this.selectedCard.flipped = false;
+      } else {
+        this.selectedCard.flipped = false;
+        // we want to reveal the card for a while even if it is not a match
+        setTimeout(() => {
+          card.flipped = false;
+          this.cd.detectChanges();
+        }, 400);
+      }
+
+      this.selectedCard = undefined;
+    } else {
+      this.selectedCard = card;
     }
 
-    this.selectedCard = card;
     this.saveBoardState();
+  }
+
+  private countTry() {
+    this.tryCount++;
+    if (this.tryCount % 2 === 0) {
+      this.gameDataSharingService.currentTries$.next(this.tryCount / 2);
+    }
   }
 
   private loadBoardState() {
     const rawSavedState = this.storageSerive.getItem(
-      GAME_BOARD_LOCAL_STORAGE_KEY
+      LocalStorageKeys.GAME_BOARD_LOCAL_STORAGE_KEY
     );
     const parsedSavedGameState = JSON.parse(rawSavedState ?? '');
     this.fields = parsedSavedGameState || this.generateGameCards(this.deckSize);
@@ -117,7 +123,7 @@ export class GameBoardComponent
 
   private saveBoardState() {
     this.storageSerive.setItem(
-      GAME_BOARD_LOCAL_STORAGE_KEY,
+      LocalStorageKeys.GAME_BOARD_LOCAL_STORAGE_KEY,
       JSON.stringify(this.fields)
     );
   }
@@ -135,12 +141,20 @@ export class GameBoardComponent
   private checkForMatch(card: GameCard): boolean {
     if (this.selectedCard?.shoeId === card.shoeId) {
       this.matches++;
-      if (this.matches === this.deckSize / 2) {
-        this.gameDataSharingService.personalBest$.next(this.tryCount / 2);
-      }
+      this.updateHighScore();
       return true;
     }
     return false;
+  }
+
+  private updateHighScore() {
+    const gameIsWon = this.matches === this.deckSize / 2;
+    const score = this.tryCount / 2;
+    const isNewHishScore =
+      score < this.gameDataSharingService.highScore$.getValue();
+    if (gameIsWon && isNewHishScore) {
+      this.gameDataSharingService.highScore$.next(score);
+    }
   }
 
   private generateGameCards(size: number): GameCard[] {

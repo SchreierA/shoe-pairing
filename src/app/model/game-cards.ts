@@ -9,4 +9,4 @@ export const gameCards: Record<number, string> = {
   7: 'L4850-00-a',
   8: 'N1963-33-a',
   9: 'Z9610-00-a',
-};
+} as const;

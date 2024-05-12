@@ -13,16 +13,18 @@ import { SubscriptionHostMixin } from '../../../mixins/SubscriptionHost';
 })
 export class GameStateComponent extends SubscriptionHostMixin() {
   currentTries = 0;
-  personalBest = 0;
+  highScore = 0;
 
   constructor(private gameDataSharingService: GameDataSharingService) {
     super();
+
     gameDataSharingService.currentTries$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((value) => (this.currentTries = value));
-    gameDataSharingService.personalBest$
+
+    gameDataSharingService.highScore$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => (this.personalBest = value));
+      .subscribe((value) => (this.highScore = value));
   }
 
   requestRestart() {

@@ -37,6 +37,7 @@ html {
 
 @mixin app-button-common {
   border-radius: 24px;
+  border: 1px $red solid;
 
   padding: 12px;
 
@@ -52,20 +53,18 @@ html {
 .app-button {
   @include app-button-common;
 
-  border: none;
-
   background-color: $red;
   color: white;
 
   &:hover {
-    background-color: rgb(268, 40, 97);
+    $red-light: rgb(268, 40, 97);
+    background-color: $red-light;
+    border: 1px $red-light solid;
   }
 }
 
 .app-button-white {
   @include app-button-common;
-
-  border: 1px $red solid;
 
   background-color: white;
   color: $red;
